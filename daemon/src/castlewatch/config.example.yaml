@@ -1,0 +1,33 @@
+# General parameters
+# - timestamp: the format to use (https://docs.python.org/2/library/datetime.html#strftime-strptime-behavior)
+# - threshold: the parameters for "cv2.def adaptiveThreshold" (blocksize, C)
+general:
+    timestamp: "%Y%m%d-%H%M%S.jpg"
+    threshold:
+        blocksize: 11
+        C: 2
+
+# The "monitors" section lists all available monitor configurations.
+# The next level below "monitors" is used to define the named monitors.
+# Parameters for a monitor configuration:
+# - url: the URL, including the user/pw if necessary to obtain the image
+# - output: the directory where to store the images
+# - interval: the polling interval in seconds
+# - enabled: whether the monitor is enabled
+# - detect_motion: whether to detect motion
+# - threshold: the percentage (0-1) of difference between images to be considered large enough to trigger motion detection
+monitors:
+    kitchen:
+        url: http://user:password@192.168.0.1/image/jpeg.cgi
+        output: /some/where/monitor/kitchen
+        interval: 1
+        enabled: True
+        detect_motion: True
+        threshold: 0.05
+    lounge:
+        url: http://user:password@192.168.0.2/image/jpeg.cgi
+        output: /some/where/monitor/lounge
+        interval: 3
+        enabled: False
+        detect_motion: True
+        threshold: 0.05
