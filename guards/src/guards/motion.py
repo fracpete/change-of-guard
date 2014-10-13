@@ -61,6 +61,8 @@ def detect_motion(t0, t1, threshold):
     :param t1: the second image (image/filename)
     :param threshold: the threshold in percent (0-1)
     :type threshold: float
+    :return: the detected ratio, whether motion was detected
+    :rtype threshold: (float, bool)
     """
     if isinstance(t0, basestring):
         t0 = load_img(t0)
@@ -69,9 +71,7 @@ def detect_motion(t0, t1, threshold):
     size  = t0.size
     count = count_diff(diff_img(t0, t1))
     ratio = float(count) / float(size)
-    if ratio > threshold:
-        print ratio
-    return ratio > threshold
+    return ratio, ratio > threshold
 
 
 def main():
@@ -90,14 +90,13 @@ def main():
                 l.append(full)
         l.sort()
         if len(l) > 1:
-            t_minus = None
             t_now = None
             for i in xrange(len(l)):
                 t_minus = t_now
                 t_now = load_img(l[i])
                 if not (t_minus is None) and not (t_now is None):
-                    motion = detect_motion(t_minus, t_now, monitors[monitor]['threshold'])
-                    print "  ", os.path.basename(l[i-1]), os.path.basename(l[i]), motion
+                    value, motion = detect_motion(t_minus, t_now, monitors[monitor]['threshold'])
+                    print("  %s %s %0.3f %s" % (os.path.basename(l[i-1]), os.path.basename(l[i]), value, motion))
 
 if __name__ == '__main__':
     main()

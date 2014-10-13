@@ -58,4 +58,6 @@ target/
 *.swp
 .idea
 config.yaml
+*.bak
+
 

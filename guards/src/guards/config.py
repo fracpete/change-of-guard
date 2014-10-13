@@ -26,7 +26,7 @@ def load_config(config=None):
     :rtype: dict
     """
     if config is None:
-        config = 'castlewatch/config.yaml'
+        config = 'guards/config.yaml'
     f = open(config)
     config = yaml.safe_load(f)
     f.close()
