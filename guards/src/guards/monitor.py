@@ -52,7 +52,7 @@ def get_image(monitor):
         recent_images[monitor] = recent_images[monitor][:2]
         # detect motion?
         if monitors[monitor]['detect_motion'] and (len(recent_images[monitor]) == 2):
-            detected = motion.detect_motion(recent_images[monitor][0], recent_images[monitor][1], monitors[monitor]['threshold'])
+            ratio, detected = motion.detect_motion(recent_images[monitor][0], recent_images[monitor][1], monitors[monitor]['threshold'])
             # delete old file?
             if not detected:
                 os.remove(recent_images[monitor][1])
