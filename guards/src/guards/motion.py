@@ -17,6 +17,7 @@
 import config as cfg
 import os
 import cv2
+import numpy as np
 
 
 def load_img(img_file):
@@ -27,12 +28,16 @@ def load_img(img_file):
     :return: the image
     """
     config = cfg.load_config()
-    image  = cv2.imread(img_file)
-    gray   = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    image = cv2.imread(img_file)
+    gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
     binary = cv2.adaptiveThreshold(
         gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
         config['general']['threshold']['blocksize'], config['general']['threshold']['C'])
-    return binary
+    # remote some noise
+    size = config['general']['noise']['kernel']
+    kernel = np.ones((size, size), np.uint8)
+    opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
+    return opening
 
 
 def diff_img(t0, t1):
@@ -68,7 +73,7 @@ def detect_motion(t0, t1, threshold):
         t0 = load_img(t0)
     if isinstance(t1, basestring):
         t1 = load_img(t1)
-    size  = t0.size
+    size = t0.size
     count = count_diff(diff_img(t0, t1))
     ratio = float(count) / float(size)
     return ratio, ratio > threshold

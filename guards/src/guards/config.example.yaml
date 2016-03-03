@@ -6,6 +6,8 @@ general:
     threshold:
         blocksize: 11
         C: 2
+    noise:
+        kernel: 5
 
 # The "monitors" section lists all available monitor configurations.
 # The next level below "monitors" is used to define the named monitors.
