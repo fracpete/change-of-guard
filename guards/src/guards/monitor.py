@@ -46,19 +46,22 @@ def get_image(monitor):
     # paused?
     out_dir = monitors[monitor]['output']
     out_file = out_dir + os.sep + filename
-    if not os.path.exists(out_dir + os.sep + "PAUSED"):
-        urllib.urlretrieve(monitors[monitor]['url'], out_file)
-        recent_images[monitor].insert(0, out_file)
-        recent_images[monitor] = recent_images[monitor][:2]
-        # detect motion?
-        if monitors[monitor]['detect_motion'] and (len(recent_images[monitor]) == 2):
-            ratio, detected = motion.detect_motion(
-                recent_images[monitor][0],
-                recent_images[monitor][1],
-                monitors[monitor]['threshold'])
-            # delete old file?
-            if not detected:
-                os.remove(recent_images[monitor][1])
+    try:
+        if not os.path.exists(out_dir + os.sep + "PAUSED"):
+            urllib.urlretrieve(monitors[monitor]['url'], out_file)
+            recent_images[monitor].insert(0, out_file)
+            recent_images[monitor] = recent_images[monitor][:2]
+            # detect motion?
+            if monitors[monitor]['detect_motion'] and (len(recent_images[monitor]) == 2):
+                ratio, detected = motion.detect_motion(
+                    recent_images[monitor][0],
+                    recent_images[monitor][1],
+                    monitors[monitor]['threshold'])
+                # delete old file?
+                if not detected:
+                    os.remove(recent_images[monitor][1])
+    except Exception, e:
+        print(e)
     Timer(monitors[monitor]['interval'], get_image, args=[monitor]).start()
 
 
