@@ -73,15 +73,17 @@ def main():
 
     # create output dirs if necessary
     for monitor in monitors:
-        out_dir = monitors[monitor]['output']
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)
+        if monitors[monitor]['enabled']:
+            out_dir = monitors[monitor]['output']
+            if not os.path.exists(out_dir):
+                os.makedirs(out_dir)
 
     # retrieve images
     for monitor in monitors:
-        print "Starting monitor:", monitor
-        recent_images[monitor] = []
-        Timer(monitors[monitor]['interval'], get_image, args=[monitor]).start()
+        if monitors[monitor]['enabled']:
+            print "Starting monitor:", monitor
+            recent_images[monitor] = []
+            Timer(monitors[monitor]['interval'], get_image, args=[monitor]).start()
 
 if __name__ == '__main__':
     if "-d" in sys.argv:
