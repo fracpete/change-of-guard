@@ -1,0 +1,12 @@
+# The "monitors" section lists all available monitor configurations.
+# The next level below "monitors" is used to define the named monitors.
+# Parameters for a monitor configuration:
+# - output: the directory where to store the images
+# - enabled: whether the monitor is enabled
+monitors:
+    kitchen:
+        output: /some/where/monitor/kitchen
+        enabled: True
+    lounge:
+        output: /some/where/monitor/lounge
+        enabled: False
