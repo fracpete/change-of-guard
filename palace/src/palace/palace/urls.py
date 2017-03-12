@@ -3,11 +3,11 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'palace.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+from . import views
 
+urlpatterns = patterns('',
+    url(r'^$', views.list, name='list'),
+    url(r'^list/$', views.list_images, name='list_images'),
+    url(r'^view/$', views.view_image, name='view_image'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^/', include('photologue.urls', namespace='photologue')),
 )

@@ -1,0 +1,24 @@
+{% extends "base_navbar.html" %}
+
+{% block main %}
+
+<h3>Change of guards</h3>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{{ monitor }}</h3>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table">
+        {% for image in images %}
+        <tr>
+          <td><a href="/view/?monitor={{ monitor }}&image={{ image }}">{{ image }}</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
