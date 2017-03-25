@@ -12,7 +12,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # motion.py
-# Copyright (C) 2014 Fracpete (fracpete at gmail dot com)
+# Copyright (C) 2014-2017 Fracpete (fracpete at gmail dot com)
 
 import config as cfg
 import os
@@ -86,22 +86,23 @@ def main():
     # motion?
     monitors = cfg.get_monitors(config)
     for monitor in monitors:
-        print monitor
-        l = []
-        d = monitors[monitor]['output']
-        for f in os.listdir(d):
-            full = os.path.join(d, f)
-            if os.path.isfile(full):
-                l.append(full)
-        l.sort()
-        if len(l) > 1:
-            t_now = None
-            for i in xrange(len(l)):
-                t_minus = t_now
-                t_now = load_img(l[i])
-                if not (t_minus is None) and not (t_now is None):
-                    value, motion = detect_motion(t_minus, t_now, monitors[monitor]['threshold'])
-                    print("  %s %s %0.3f %s" % (os.path.basename(l[i-1]), os.path.basename(l[i]), value, motion))
+        if monitors[monitor]['enabled']:
+            print monitor
+            l = []
+            d = monitors[monitor]['output']
+            for f in os.listdir(d):
+                full = os.path.join(d, f)
+                if os.path.isfile(full):
+                    l.append(full)
+            l.sort()
+            if len(l) > 1:
+                t_now = None
+                for i in xrange(len(l)):
+                    t_minus = t_now
+                    t_now = load_img(l[i])
+                    if not (t_minus is None) and not (t_now is None):
+                        value, motion = detect_motion(t_minus, t_now, monitors[monitor]['threshold'])
+                        print("  %s %s %0.3f %s" % (os.path.basename(l[i-1]), os.path.basename(l[i]), value, motion))
 
 if __name__ == '__main__':
     main()
