@@ -22,8 +22,6 @@ SECRET_KEY = 'wi0ba0y78q3+)6$0tk+(&zm=2!mh0sl8j9v3cb#3nemea71eg1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -36,8 +34,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'photologue',
-    'sortedm2m',
+    'django.contrib.sites',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,18 +48,27 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'palace.urls'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            'palace/templates',
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': True,
+        },
+    },
+]
+
 WSGI_APPLICATION = 'palace.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
@@ -82,8 +88,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    'palace/static/',
+]
 
-MEDIA_URL = "/"
-
-# TODO: from yaml file???
-MEDIA_ROOT = ""
+# the configuration
+from . import config as cfg
+config = cfg.load_config()
+monitors = cfg.get_monitors(config)
