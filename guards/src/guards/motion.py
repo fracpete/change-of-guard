@@ -17,8 +17,9 @@
 import config as cfg
 import os
 import cv2
-import numpy as np
 
+config = cfg.load_config()
+""" the configuration in use. """
 
 def load_img(img_file):
     """
@@ -27,18 +28,9 @@ def load_img(img_file):
     :type img_file: str
     :return: the image
     """
-    config = cfg.load_config()
     image = cv2.imread(img_file)
     gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-    binary = cv2.adaptiveThreshold(
-        gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,
-        config['general']['threshold']['blocksize'], config['general']['threshold']['C'])
-    # remote some noise
-    size = config['general']['noise']['kernel']
-    kernel = np.ones((size, size), np.uint8)
-    opening = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)
-    return opening
-
+    return gray
 
 def diff_img(t0, t1):
     """
@@ -48,6 +40,15 @@ def diff_img(t0, t1):
     """
     return cv2.absdiff(t0, t1)
 
+def to_bw(img):
+    """
+    Turns the gray image into binary. Threshold is determined using Otsu's method.
+    :param img: the image to convert
+    :return: the binary image
+    """
+    global config
+    (thresh, binary) = cv2.threshold(img, config['general']['threshold'], 255, cv2.THRESH_BINARY)
+    return binary
 
 def count_diff(img):
     """
@@ -57,7 +58,6 @@ def count_diff(img):
     :rtype: int
     """
     return cv2.countNonZero(img)
-
 
 def detect_motion(t0, t1, threshold):
     """
@@ -74,14 +74,12 @@ def detect_motion(t0, t1, threshold):
     if isinstance(t1, basestring):
         t1 = load_img(t1)
     size = t0.size
-    count = count_diff(diff_img(t0, t1))
+    count = count_diff(to_bw(diff_img(t0, t1)))
     ratio = float(count) / float(size)
     return ratio, ratio > threshold
 
-
 def main():
-    # load config
-    config = cfg.load_config()
+    global config
 
     # motion?
     monitors = cfg.get_monitors(config)
